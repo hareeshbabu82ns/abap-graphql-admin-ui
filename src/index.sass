@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
+
+// Set your brand colors
+$footer-blue: hsl(228, 70%, 6%);  
+$navbar-bg: hsl(0, 0%, 100%);
+$logo-red: #FAB700;
+$purple: #8A4D76;
+$pink: #FA7C91;
+$brown: #757763;
+$beige-light: #D0D1CD;
+$beige-lighter: #EFF0EB;
+
+// Update Bulma's global variables
+$family-sans-serif: "Nunito", sans-serif;
+// $grey-dark: $brown;
+// $grey-light: $beige-light;
+// $primary: $purple;
+// $link: $pink;  
+
+// Update some of Bulma's component variables
+// $control-border-width: 2px;
+// $input-background-color: $beige-lighter;
+// $input-border-color: transparent;
+// $input-shadow: none;  
+$navbar-background-color: $navbar-bg;
+
+// @import '../node_modules/bulma/bulma';
+// @import '../node_modules/react-bulma-components/src/index';
+
+// @import "bulma/sass/utilities/_all.sass"
+// @import "bulma/sass/grid/columns.sass"
+
+.bm--card-equal-height
+   display: flex
+   flex-direction: column
+   height: 100%
+
+.bm--card-equal-height .card-footer 
+   margin-top: auto
+
+.bm--img-shadow
+  box-shadow: 0 10px 25px 0 rgba(0,0,0,.3)
+
+.bm--icon-xlarge
+   font-size: 2em
+   height: 5rem
+   width: 5rem
+
+.bm--card-img-zoom
+   overflow: hidden
+   .image
+      transform: scale(1)
+      transition: all 0.3s ease 0s
+      &:hover
+         transform: scale(1.2) rotate(-7deg) 
+         transition: all 0.3s ease 0s

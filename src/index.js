@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.sass';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+
+import 'react-semantic-toasts/styles/react-semantic-alert.css';
+
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
