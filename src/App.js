@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ApolloProvider } from 'react-apollo'
-import './App.css';
+import './App.sass';
 
 import AppRouter from "./routers/AppRouter";
 import gqlClient from './utils/GqlClient'

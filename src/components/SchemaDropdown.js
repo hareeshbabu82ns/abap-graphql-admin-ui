@@ -1,24 +1,12 @@
 import React, { useState } from 'react'
 import { Query } from "react-apollo";
-import { gql } from "apollo-boost";
 import { withRouter } from "react-router-dom";
 import _ from 'lodash'
 import { Dropdown } from 'semantic-ui-react'
-
-
-const GET_SCHEMA_LIST = gql`
-  {
-    schema{
-      guid
-      name
-      description
-      path
-    }
-  }
-`;
+import { GET_SCHEMA_LIST } from '../utils/gql_queries'
 
 const SchemaDropdown = ({ history }) => {
-  const schemaIdRegex = /^(\/schema)\/((\S.*))(\/.*$)/g;
+  const schemaIdRegex = /^(\/schema)\/(\S.*)(\/.*$)/g;
   const schemaId = history.location.pathname.replace(schemaIdRegex, '$2');
   const [schema, setSchema] = useState(schemaId || '');
   return (
@@ -38,7 +26,7 @@ const SchemaDropdown = ({ history }) => {
           onChange={(e, { value }) => {
             console.log(value)
             setSchema(value)
-            history.push(`/schema/${value}/graph`)
+            history.push(`/schema/${value}/edit`)
           }}
         />
       }}

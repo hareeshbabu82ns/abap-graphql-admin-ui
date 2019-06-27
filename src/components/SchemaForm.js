@@ -22,7 +22,6 @@ const SchemaSchema = Yup.object().shape({
 
 const SchemaForm = ({ schema, onSubmit }) => (
   <div>
-    <h1>Schema:</h1>
     <Formik
       initialValues={{
         name: schema.name,
@@ -57,7 +56,7 @@ const SchemaForm = ({ schema, onSubmit }) => (
           <UIForm as={Form} className="ui form" onSubmit={handleSubmit}>
             {errors.length !== 0 && renderMessages()}
             <UIForm.Field
-              label="ID"
+              label="Schema ID"
               control={Field}
               name="name"
               type="text"
@@ -90,7 +89,14 @@ const SchemaForm = ({ schema, onSubmit }) => (
                 onClick={handleReset}
                 secondary >
                 Clear
-          </UIForm.Button>
+              </UIForm.Button>
+              <UIForm.Button
+                type="button"
+                disabled={isSubmitting}
+                onClick={handleReset}
+                color='red' >
+                Delete
+              </UIForm.Button>
             </UIForm.Group>
           </UIForm>
         )

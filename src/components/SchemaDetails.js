@@ -1,7 +1,6 @@
 import React from 'react'
 import { Query, Mutation } from "react-apollo";
 import { gql } from "apollo-boost";
-
 import SchemaForm from './SchemaForm'
 
 
@@ -49,8 +48,7 @@ const SchemaDetails = ({ match }) => (
 
       );
     }}
-  </Query >
-
+  </Query>
 )
 
 export default SchemaDetails

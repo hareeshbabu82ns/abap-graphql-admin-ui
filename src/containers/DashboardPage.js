@@ -1,10 +1,10 @@
 import React from "react";
-
+import { withRouter } from "react-router-dom";
 
 const DashboardPage = () => (
   <div>
-    Dashboard
+    DashboardPage
   </div>
 );
 
-export default DashboardPage;
+export default withRouter(DashboardPage);

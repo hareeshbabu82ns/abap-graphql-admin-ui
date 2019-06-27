@@ -1,7 +1,7 @@
 import React from 'react'
 import { Query } from "react-apollo";
 import { gql } from "apollo-boost";
-import { Voyager } from 'graphql-voyager';
+import { Editor } from 'graphql-editor';
 import { withRouter } from "react-router-dom";
 import config from '../utils/config'
 
@@ -30,22 +30,18 @@ const SchemaDetails = ({ match }) => (
 
       let schema = data.schema[0];
 
-      function introspectionProvider(query) {
-        return fetch(`${config.baseUrl}${schema.path}?sap-client=${config.sapClient}`, {
-          method: 'post',
-          headers: { 'Content-Type': 'application/json' },
-          // mode: 'no-cors',
-          body: JSON.stringify({ query: query }),
-        }).then(response => response.json());
-      }
-
       return (
-        <Voyager introspection={introspectionProvider}
-          displayOptions={{ sortByAlphabet: true }}
-          workerURI={process.env.PUBLIC_URL + '/voyager.worker.js'} />
+        <div className="geditor" >
+          <Editor editorVisible={true}
+            graphController={(controller) => {
+              controller.getSchemaFromURL(`${config.baseUrl}${schema.path}?sap-client=${config.sapClient}`)
+              // , 'Authorization:Basic RGV2ZWxvcGVyOkRvd24xb2Fk')
+            }} />
+        </div>
       );
     }}
   </Query>
+
 );
 
 export default withRouter(SchemaDetails)
