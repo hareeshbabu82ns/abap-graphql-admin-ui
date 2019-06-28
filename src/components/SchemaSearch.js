@@ -52,17 +52,17 @@ const SchemaSearch = ({ history, match, searchInput }) => {
   const [searchQuery, setSearchQuery] = useState(searchInput || _.get(qs, 'query', ''));
   const [searchIn, setSearchIn] = useState(_.get(qs, 'in', 'all'));
   const [selectedTab, setSelectedTab] = useState(_.get(qs, 'tab', 'types'));
-  const schemaId = _.get(match, 'params.id', '')
+  const schemaId = decodeURIComponent(_.get(match, 'params.id', ''))
 
   const handleTabChange = (e, { name }) => {
     setSelectedTab(name)
-    history.push(`/schema/${schemaId}/search?query=${searchQuery}&in=${searchIn}&tab=${name}`)
+    history.push(`/schema/${encodeURIComponent(schemaId)}/search?query=${searchQuery}&in=${searchIn}&tab=${name}`)
   }
   const handleSearchChange = (e, { value }) => {
     if (value.length < 1) return setSearchQuery('')
     if (value.length < 5) return;
     setSearchQuery(value)
-    history.push(`/schema/${schemaId}/search?query=${value}&in=${searchIn}&tab=${selectedTab}`)
+    history.push(`/schema/${encodeURIComponent(schemaId)}/search?query=${value}&in=${searchIn}&tab=${selectedTab}`)
   }
 
   return (
@@ -85,7 +85,7 @@ const SchemaSearch = ({ history, match, searchInput }) => {
                 value={searchIn}
                 onChange={(e, { value }) => {
                   setSearchIn(value)
-                  history.push(`/schema/${schemaId}/search?query=${searchQuery}&in=${value}&tab=${selectedTab}`)
+                  history.push(`/schema/${encodeURIComponent(schemaId)}/search?query=${searchQuery}&in=${value}&tab=${selectedTab}`)
                 }} />}
             />
           </Menu.Item>

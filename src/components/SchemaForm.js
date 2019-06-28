@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik, Form, Field } from 'formik';
-import { Form as UIForm, Message } from 'semantic-ui-react'
+import { Form as UIForm } from 'semantic-ui-react'
 import { toast } from 'react-semantic-toasts';
 
 import * as Yup from 'yup';

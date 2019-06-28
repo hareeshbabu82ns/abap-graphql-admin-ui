@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { Query } from "react-apollo";
 import { withRouter } from "react-router-dom";
-import _ from 'lodash'
+// import _ from 'lodash'
 import { Dropdown } from 'semantic-ui-react'
 import { GET_SCHEMA_LIST } from '../utils/gql_queries'
 
 const SchemaDropdown = ({ history }) => {
   const schemaIdRegex = /^(\/schema)\/(\S.*)(\/.*$)/g;
   const schemaId = history.location.pathname.replace(schemaIdRegex, '$2');
-  const [schema, setSchema] = useState(schemaId || '');
+  const [schema, setSchema] = useState(decodeURIComponent(schemaId) || '');
   return (
     <Query query={GET_SCHEMA_LIST}>
       {({ loading, error, data }) => {
@@ -26,7 +26,7 @@ const SchemaDropdown = ({ history }) => {
           onChange={(e, { value }) => {
             console.log(value)
             setSchema(value)
-            history.push(`/schema/${value}/edit`)
+            history.push(`/schema/${encodeURIComponent(value)}/edit`)
           }}
         />
       }}

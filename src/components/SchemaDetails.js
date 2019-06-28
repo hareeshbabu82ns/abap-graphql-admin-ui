@@ -34,7 +34,6 @@ const SchemaDetails = ({ match }) => (
         { guid: match.params.id }
     }}>
     {({ loading, error, data }) => {
-      console.log(JSON.stringify(match, null, 2))
       if (loading) return <p>Loading...</p>;
       if (error) return <p>Error Loading Schema List</p>;
       let schema = data.schema[0];
@@ -45,7 +44,6 @@ const SchemaDetails = ({ match }) => (
               return updateSchema({ variables: { data, where: { guid: match.params.id } } })
             }} />)}
         </Mutation>
-
       );
     }}
   </Query>

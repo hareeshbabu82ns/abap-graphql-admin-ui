@@ -1,7 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import SchemaVoyager from '../components/SchemaVoyager'
-import { Button, Segment, Container, Menu, Icon } from 'semantic-ui-react'
+import { Container } from 'semantic-ui-react'
 
 const VoyagerPage = () => (
   <Container fluid style={{

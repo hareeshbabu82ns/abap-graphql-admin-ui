@@ -1,5 +1,4 @@
 import React from "react";
-import { Container } from "semantic-ui-react";
 import { SemanticToastContainer } from 'react-semantic-toasts';
 import { Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory as createHistory } from "history";
