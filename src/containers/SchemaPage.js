@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from "react-router-dom";
+import { Route, NavLink } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import { Segment, Container, Menu, Icon } from 'semantic-ui-react'
 import SchemaDetails from '../components/SchemaDetails'
@@ -34,10 +34,12 @@ const SchemaPage = ({ history }) => {
               history.push(`/schema/${encodeURIComponent(schemaId)}/edit`)
             }}><Icon name='edit' />
           </Menu.Item>
-          <Menu.Item name='new'><Icon name='file outline' /></Menu.Item>
+          <Menu.Item name='new'
+            as={NavLink} to={`/schema/_/new`} exact><Icon name='file outline' /></Menu.Item>
         </Menu.Menu>
       </Menu>
       <Segment attached='bottom' >
+        <Route path={`/schema/_/new`} component={SchemaDetails} exact />
         <Route path={`/schema/:id/edit`} component={SchemaDetails} exact />
         <Route path={`/schema/:id/search`} component={SchemaSearch} />
       </Segment>

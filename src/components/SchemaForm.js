@@ -20,7 +20,7 @@ const SchemaSchema = Yup.object().shape({
     .required('Required'),
 });
 
-const SchemaForm = ({ schema, onSubmit }) => (
+const SchemaForm = ({ schema, onSubmit, onDelete }) => (
   <div>
     <Formik
       initialValues={{
@@ -37,14 +37,11 @@ const SchemaForm = ({ schema, onSubmit }) => (
       //   return errors;
       // }}
       onSubmit={async (values, { setSubmitting }) => {
-        // setTimeout(() => {
-        // alert(JSON.stringify(values, null, 2));
         await onSubmit(values);
         setSubmitting(false);
-        // }, 400);
       }}
     >
-      {({ touched, errors, isSubmitting, dirty, handleSubmit, handleReset }) => {
+      {({ touched, errors, isSubmitting, dirty, handleSubmit, handleReset, handleDelete }) => {
         const renderMessages = () => (
           Object.keys(errors).map((key, index) => (
             toast({
@@ -80,9 +77,12 @@ const SchemaForm = ({ schema, onSubmit }) => (
               error={touched.path && errors.path}
             />
             <UIForm.Group>
-              <UIForm.Button type="submit" disabled={!dirty || isSubmitting} primary>
+              {schema.guid && <UIForm.Button type="submit" disabled={!dirty || isSubmitting} primary>
                 Update
-              </UIForm.Button>
+              </UIForm.Button>}
+              {!schema.guid && <UIForm.Button type="submit" disabled={!dirty || isSubmitting} primary>
+                Save
+              </UIForm.Button>}
               <UIForm.Button
                 type="button"
                 disabled={!dirty || isSubmitting}
@@ -90,13 +90,13 @@ const SchemaForm = ({ schema, onSubmit }) => (
                 secondary >
                 Clear
               </UIForm.Button>
-              <UIForm.Button
+              {schema.guid && <UIForm.Button
                 type="button"
                 disabled={isSubmitting}
-                onClick={handleReset}
+                onClick={onDelete}
                 color='red' >
                 Delete
-              </UIForm.Button>
+              </UIForm.Button>}
             </UIForm.Group>
           </UIForm>
         )
