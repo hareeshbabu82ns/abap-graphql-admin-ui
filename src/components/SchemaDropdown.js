@@ -15,8 +15,8 @@ const SchemaDropdown = ({ history }) => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error Loading Schema List</p>;
 
-        const options = data.schema.map(({ guid, name, description }) => (
-          { key: guid, text: name, value: guid }));
+        const options = data.schema.map(({ id, name, description }) => (
+          { key: id, text: name, value: id }));
         return <Dropdown
           item
           options={options}

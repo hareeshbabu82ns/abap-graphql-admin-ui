@@ -4,17 +4,8 @@ import { gql } from "apollo-boost";
 import { Voyager } from 'graphql-voyager';
 import { withRouter } from "react-router-dom";
 import config from '../utils/config'
+import { GET_SCHEMA_BY_ID } from '../utils/gql_queries'
 
-const GET_SCHEMA_BY_ID = gql`
-  query schema($schemaInput:SchemaWhereInput!){
-    schema(where:$schemaInput){
-      guid
-      name
-      description
-      path
-    }
-  }
-`;
 
 const SchemaDetails = ({ match }) => (
   <Query query={GET_SCHEMA_BY_ID}

@@ -1,43 +1,10 @@
 import React, { useState } from 'react'
 import { Query } from "react-apollo";
-import { gql } from "apollo-boost";
+import { NavLink } from "react-router-dom";
 import _ from 'lodash'
 import queryString from 'querystring'
 import { Segment, Dropdown, Menu, Icon, Input, Header, Card } from 'semantic-ui-react'
-
-const SEARCH_SCHEMA_FOR_TYPES_FIELDS_BY_NAME = gql`
-query search($typesWhere:TypeWhereInput!,
-  	$fieldsWhere: FieldWhereInput!){
-  types: type(where:$typesWhere){
-    guid
-    name
-    kind
-    abapName
-    description
-  }
-  fields: field(where:$fieldsWhere){
-    guid
-    name
-    abapName
-    description
-    type
-    resolver
-    customType
-    parentType{
-      guid
-      name
-    }
-    parentField{
-      guid
-      name
-      parentType{
-        guid
-        name
-      }
-    }
-  }
-}
-`;
+import { SEARCH_SCHEMA_FOR_TYPES_FIELDS_BY_NAME } from '../utils/gql_queries'
 
 const options = [
   { key: 'all', text: 'All', value: 'all' },
@@ -118,9 +85,11 @@ const SchemaSearch = ({ history, match, searchInput }) => {
               {(selectedTab === 'types') && <Segment attached='bottom'>
                 <Card.Group>
                   {data.types.filter((type) => type.kind === 'OBJECT').map(type => (
-                    <Card key={type.guid}>
+                    <Card key={type.id}>
                       <Card.Content>
-                        <Card.Header>{type.name}</Card.Header>
+                        <Card.Header>
+                          <NavLink to={`/schema/${encodeURIComponent(schemaId)}/type/${encodeURIComponent(type.id)}`}>{type.name}</NavLink>
+                        </Card.Header>
                         <Card.Meta>{type.abapName}</Card.Meta>
                         <Card.Description>
                           {type.description}
@@ -133,9 +102,11 @@ const SchemaSearch = ({ history, match, searchInput }) => {
               {(selectedTab === 'input_types') && <Segment attached='bottom'>
                 <Card.Group>
                   {data.types.filter((type) => type.kind === 'INPUT_OBJECT').map(type => (
-                    <Card key={type.guid}>
+                    <Card key={type.id}>
                       <Card.Content>
-                        <Card.Header>{type.name}</Card.Header>
+                        <Card.Header>
+                          <NavLink to={`/schema/${encodeURIComponent(schemaId)}/type/${encodeURIComponent(type.id)}`}>{type.name}</NavLink>
+                        </Card.Header>
                         <Card.Meta>{type.abapName}</Card.Meta>
                         <Card.Description>
                           {type.description}
@@ -148,9 +119,11 @@ const SchemaSearch = ({ history, match, searchInput }) => {
               {(selectedTab === 'enums') && <Segment attached='bottom'>
                 <Card.Group>
                   {data.types.filter((type) => type.kind === 'ENUM').map(type => (
-                    <Card key={type.guid}>
+                    <Card key={type.id}>
                       <Card.Content>
-                        <Card.Header>{type.name}</Card.Header>
+                        <Card.Header>
+                          <NavLink to={`/schema/${encodeURIComponent(schemaId)}/type/${encodeURIComponent(type.id)}`}>{type.name}</NavLink>
+                        </Card.Header>
                         <Card.Meta>{type.abapName}</Card.Meta>
                         <Card.Description>
                           {type.description}
@@ -163,11 +136,13 @@ const SchemaSearch = ({ history, match, searchInput }) => {
               {selectedTab === 'fields' && <Segment attached='bottom'>
                 <Card.Group>
                   {data.fields.map(field => (
-                    <Card key={field.guid}>
+                    <Card key={field.id}>
                       <Card.Content>
-                        <Card.Header>{field.name} ({_.get(field, 'parentType.name',
-                          _.get(field, 'parentField.parentType.name', '') + '.' +
-                          _.get(field, 'parentField.name', ''))})</Card.Header>
+                        <Card.Header>
+                          <NavLink to={`/schema/${encodeURIComponent(schemaId)}/field/${encodeURIComponent(field.id)}`}>{field.name}</NavLink> ({_.get(field, 'parentType.name',
+                            _.get(field, 'parentField.parentType.name', '') + '.' +
+                            _.get(field, 'parentField.name', ''))})
+                          </Card.Header>
                         <Card.Meta>{field.abapName} - {field.type ? field.type : field.customType}</Card.Meta>
                         <Card.Description>
                           {field.description}

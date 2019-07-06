@@ -77,10 +77,10 @@ const SchemaForm = ({ schema, onSubmit, onDelete }) => (
               error={touched.path && errors.path}
             />
             <UIForm.Group>
-              {schema.guid && <UIForm.Button type="submit" disabled={!dirty || isSubmitting} primary>
+              {schema.id && <UIForm.Button type="submit" disabled={!dirty || isSubmitting} primary>
                 Update
               </UIForm.Button>}
-              {!schema.guid && <UIForm.Button type="submit" disabled={!dirty || isSubmitting} primary>
+              {!schema.id && <UIForm.Button type="submit" disabled={!dirty || isSubmitting} primary>
                 Save
               </UIForm.Button>}
               <UIForm.Button
@@ -90,7 +90,7 @@ const SchemaForm = ({ schema, onSubmit, onDelete }) => (
                 secondary >
                 Clear
               </UIForm.Button>
-              {schema.guid && <UIForm.Button
+              {schema.id && <UIForm.Button
                 type="button"
                 disabled={isSubmitting}
                 onClick={onDelete}

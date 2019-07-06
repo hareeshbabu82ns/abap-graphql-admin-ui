@@ -1,48 +1,9 @@
 import React from 'react'
 import { Query, Mutation, graphql, compose } from "react-apollo";
-import { gql } from "apollo-boost";
 import SchemaForm from './SchemaForm'
+import { GET_SCHEMA_BY_ID, UPDATE_SCHEMA_BY_ID, CREATE_SCHEMA, DELETE_SCHEMA_BY_ID } from '../utils/gql_queries'
 
 
-const GET_SCHEMA_BY_ID = gql`
-  query schema($schemaInput:SchemaWhereInput!){
-    schema(where:$schemaInput){
-      guid
-      name
-      description
-      path
-    }
-  }
-`;
-
-const UPDATE_SCHEMA_BY_ID = gql`
-mutation UpdateSchema($data: SchemaUpdateDataInput!,
-			$where: SchemaWhereInput!){
-    updateSchema(with:$data, where: $where){
-      guid
-      name
-      description
-      path
-    }
-  }
-`;
-const CREATE_SCHEMA = gql`
-mutation CreateSchema($data: SchemaInput!){
-    createSchema(with:[$data]){
-      guid
-      name
-      description
-      path
-    }
-  }
-`;
-const DELETE_SCHEMA_BY_ID = gql`
-mutation DeleteSchema($id: ID!){
-    deleteSchema(where:{guid:$id}){
-      guid
-    }
-  }
-`;
 const SchemaDetails = ({ history, match, mutate }) => (
   <Query query={GET_SCHEMA_BY_ID}
     variables={{
@@ -58,10 +19,10 @@ const SchemaDetails = ({ history, match, mutate }) => (
         <Mutation mutation={UPDATE_SCHEMA_BY_ID}>
           {(updateSchema, { data }) => (<SchemaForm schema={schema}
             onSubmit={(data) => {
-              return updateSchema({ variables: { data, where: { guid: decodeURIComponent(match.params.id) } } })
+              return updateSchema({ variables: { data, where: { id: decodeURIComponent(match.params.id) } } })
             }}
             onDelete={(data) => {
-              mutate({ variables: { id: decodeURIComponent(match.params.id) } })
+              mutate({ mutation: DELETE_SCHEMA_BY_ID, variables: { id: decodeURIComponent(match.params.id) } })
               history.push(`/schema`)
             }} />)}
         </Mutation>
@@ -71,7 +32,7 @@ const SchemaDetails = ({ history, match, mutate }) => (
             {(createSchema, { data }) => (<SchemaForm schema={schema}
               onSubmit={(data) => {
                 return createSchema({ variables: { data } }).then((result) => {
-                  history.push(`/schema/${encodeURIComponent(result.data.createSchema[0].guid)}/edit`)
+                  history.push(`/schema/${encodeURIComponent(result.data.createSchema[0].id)}/edit`)
                   return data
                 })
               }} />)}
