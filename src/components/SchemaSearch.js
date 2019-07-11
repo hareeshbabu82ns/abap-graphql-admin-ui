@@ -4,7 +4,8 @@ import { NavLink } from "react-router-dom";
 import _ from 'lodash'
 import queryString from 'querystring'
 import { Segment, Dropdown, Menu, Icon, Input, Header, Card } from 'semantic-ui-react'
-import { SEARCH_SCHEMA_FOR_TYPES_FIELDS_BY_NAME } from '../utils/gql_queries'
+import { SEARCH_SCHEMA_FOR_TYPES_FIELDS_BY_NAME } from '../utils/gql_queries_schema'
+import utils from '../utils/utils'
 
 const options = [
   { key: 'all', text: 'All', value: 'all' },
@@ -15,6 +16,7 @@ const options = [
 ]
 
 const SchemaSearch = ({ history, match, searchInput }) => {
+  const segments = utils.getPathSegments(history.location.pathname)
   const qs = queryString.parse(history.location.search.substring(1)) //to get Query and remove ? at position 0
   const [searchQuery, setSearchQuery] = useState(searchInput || _.get(qs, 'query', ''));
   const [searchIn, setSearchIn] = useState(_.get(qs, 'in', 'all'));
@@ -23,13 +25,13 @@ const SchemaSearch = ({ history, match, searchInput }) => {
 
   const handleTabChange = (e, { name }) => {
     setSelectedTab(name)
-    history.push(`/schema/${encodeURIComponent(schemaId)}/search?query=${searchQuery}&in=${searchIn}&tab=${name}`)
+    history.push(utils.buildPathWithSegments(segments, `search?query=${searchQuery}&in=${searchIn}&tab=${name}`))
   }
   const handleSearchChange = (e, { value }) => {
     if (value.length < 1) return setSearchQuery('')
     if (value.length < 5) return;
     setSearchQuery(value)
-    history.push(`/schema/${encodeURIComponent(schemaId)}/search?query=${value}&in=${searchIn}&tab=${selectedTab}`)
+    history.push(utils.buildPathWithSegments(segments, `search?query=${value}&in=${searchIn}&tab=${selectedTab}`))
   }
 
   return (
@@ -52,7 +54,7 @@ const SchemaSearch = ({ history, match, searchInput }) => {
                 value={searchIn}
                 onChange={(e, { value }) => {
                   setSearchIn(value)
-                  history.push(`/schema/${encodeURIComponent(schemaId)}/search?query=${searchQuery}&in=${value}&tab=${selectedTab}`)
+                  history.push(utils.buildPathWithSegments(segments, `search?query=${searchQuery}&in=${value}&tab=${selectedTab}`))
                 }} />}
             />
           </Menu.Item>
@@ -88,7 +90,9 @@ const SchemaSearch = ({ history, match, searchInput }) => {
                     <Card key={type.id}>
                       <Card.Content>
                         <Card.Header>
-                          <NavLink to={`/schema/${encodeURIComponent(schemaId)}/type/${encodeURIComponent(type.id)}`}>{type.name}</NavLink>
+                          <NavLink
+                            to={utils.buildPathWithSegments({ ...segments, type: type.id }, `edit`)}
+                          >{type.name}</NavLink>
                         </Card.Header>
                         <Card.Meta>{type.abapName}</Card.Meta>
                         <Card.Description>
@@ -105,7 +109,9 @@ const SchemaSearch = ({ history, match, searchInput }) => {
                     <Card key={type.id}>
                       <Card.Content>
                         <Card.Header>
-                          <NavLink to={`/schema/${encodeURIComponent(schemaId)}/type/${encodeURIComponent(type.id)}`}>{type.name}</NavLink>
+                          <NavLink
+                            to={utils.buildPathWithSegments({ ...segments, type: type.id }, `edit`)}
+                          >{type.name}</NavLink>
                         </Card.Header>
                         <Card.Meta>{type.abapName}</Card.Meta>
                         <Card.Description>
@@ -122,7 +128,9 @@ const SchemaSearch = ({ history, match, searchInput }) => {
                     <Card key={type.id}>
                       <Card.Content>
                         <Card.Header>
-                          <NavLink to={`/schema/${encodeURIComponent(schemaId)}/type/${encodeURIComponent(type.id)}`}>{type.name}</NavLink>
+                          <NavLink
+                            to={utils.buildPathWithSegments({ ...segments, type: type.id }, `edit`)}
+                          >{type.name}</NavLink>
                         </Card.Header>
                         <Card.Meta>{type.abapName}</Card.Meta>
                         <Card.Description>
@@ -139,7 +147,12 @@ const SchemaSearch = ({ history, match, searchInput }) => {
                     <Card key={field.id}>
                       <Card.Content>
                         <Card.Header>
-                          <NavLink to={`/schema/${encodeURIComponent(schemaId)}/field/${encodeURIComponent(field.id)}`}>{field.name}</NavLink> ({_.get(field, 'parentType.name',
+                          <NavLink
+                            to={utils.buildPathWithSegments({
+                              ...segments, type: _.get(field, 'parentType.id',
+                                _.get(field, 'parentField.parentType.id', '')), field: field.id
+                            }, `edit`)}
+                          >{field.name}</NavLink> ({_.get(field, 'parentType.name',
                             _.get(field, 'parentField.parentType.name', '') + '.' +
                             _.get(field, 'parentField.name', ''))})
                           </Card.Header>

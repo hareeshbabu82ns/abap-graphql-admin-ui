@@ -1,16 +1,18 @@
 import React from 'react';
 import { Route, NavLink } from "react-router-dom";
+import { Query } from "react-apollo";
 import { withRouter } from "react-router-dom";
 import { Segment, Container, Menu, Icon, Dropdown } from 'semantic-ui-react'
 import SchemaDetails from '../components/SchemaDetails'
 import SchemaSearch from '../components/SchemaSearch'
+import utils from '../utils/utils'
+import { GET_SCHEMA_BY_ID } from '../utils/gql_queries_schema'
 
 const SchemaPage = ({ history }) => {
-  const schemaIdRegex = /^(\/schema)\/(\S.*)(\/.*$)/g;
-  const schemaId = decodeURIComponent(history.location.pathname
-    .replace(schemaIdRegex, '$2'));
-  const currentPathSegment = history.location.pathname
-    .replace(schemaIdRegex, '$3');
+  const segments = utils.getPathSegments(history.location.pathname)
+  console.log('segments', segments)
+  const schemaId = segments.schema;
+  const currentOperation = segments.operation;
   return (
     <Container fluid style={{
       paddingLeft: '2em',
@@ -19,17 +21,28 @@ const SchemaPage = ({ history }) => {
 
       <Menu attached='top'>
         <Menu.Item>
-          {currentPathSegment.substring(1)}
+          Schema:&nbsp;
+          {currentOperation !== 'new' && <Query query={GET_SCHEMA_BY_ID}
+            variables={{
+              schemaInput:
+                { guid: schemaId }
+            }}>
+            {({ loading, error, data }) => {
+              if (loading) return <p className="ui active inline loader mini"></p>;
+              if (error) return 'Error Loading Schema';
+              return data.schema[0].name
+            }}
+          </Query>}
         </Menu.Item>
         <Menu.Menu position='right'>
           <Menu.Item name='search'
-            active={currentPathSegment === '/search'}
+            active={currentOperation === 'search'}
             onClick={(e, { value }) => {
               history.push(`/schema/${encodeURIComponent(schemaId)}/search`)
             }}><Icon name='search' />
           </Menu.Item>
           <Menu.Item name='edit'
-            active={currentPathSegment === '/edit'}
+            active={currentOperation === 'edit'}
             onClick={(e, { value }) => {
               history.push(`/schema/${encodeURIComponent(schemaId)}/edit`)
             }}><Icon name='edit' />
@@ -37,9 +50,9 @@ const SchemaPage = ({ history }) => {
 
           <Dropdown item icon='file outline' simple>
             <Dropdown.Menu>
-              <Dropdown.Item as={NavLink} to={`/schema/_/new`}>Schema</Dropdown.Item>
+              <Dropdown.Item as={NavLink} active={currentOperation === 'new'} to={`/schema/_/new`}>Schema</Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item as={NavLink} to={`/schema/${encodeURIComponent(schemaId)}/type/new`}>Type</Dropdown.Item>
+              <Dropdown.Item as={NavLink} to={`/schema/${encodeURIComponent(schemaId)}/type/_/new`}>Type</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Menu.Menu>
@@ -47,7 +60,7 @@ const SchemaPage = ({ history }) => {
       <Segment attached='bottom' >
         <Route path={`/schema/_/new`} component={SchemaDetails} exact />
         <Route path={`/schema/:id/edit`} component={SchemaDetails} exact />
-        <Route path={`/schema/:id/search`} component={SchemaSearch} />
+        <Route path={`/schema/:id/search`} component={SchemaSearch} exact />
       </Segment>
     </Container>
   );

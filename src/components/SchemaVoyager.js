@@ -1,10 +1,9 @@
 import React from 'react'
 import { Query } from "react-apollo";
-import { gql } from "apollo-boost";
 import { Voyager } from 'graphql-voyager';
 import { withRouter } from "react-router-dom";
 import config from '../utils/config'
-import { GET_SCHEMA_BY_ID } from '../utils/gql_queries'
+import { GET_SCHEMA_BY_ID } from '../utils/gql_queries_schema'
 
 
 const SchemaDetails = ({ match }) => (
