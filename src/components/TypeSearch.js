@@ -21,7 +21,6 @@ const TypeSearch = ({ history, match, searchInput }) => {
   const [searchQuery, setSearchQuery] = useState(searchInput || _.get(qs, 'query', ''));
   const [searchIn, setSearchIn] = useState(_.get(qs, 'in', 'all'));
   const [selectedTab, setSelectedTab] = useState(_.get(qs, 'tab', 'fields'));
-  const typeId = segments.type
 
   const handleTabChange = (e, { name }) => {
     setSelectedTab(name)
@@ -46,12 +45,6 @@ const TypeSearch = ({ history, match, searchInput }) => {
               iconPosition='left'
               placeholder='Search...'
               onChange={_.debounce(handleSearchChange, 500)}
-              action={<Dropdown basic floating options={options}
-                value={searchIn}
-                onChange={(e, { value }) => {
-                  setSearchIn(value)
-                  history.push(utils.buildPathWithSegments(segments, `search?query=${searchQuery}`))
-                }} />}
             />
           </Menu.Item>
         </Menu.Menu>
@@ -87,7 +80,9 @@ const TypeSearch = ({ history, match, searchInput }) => {
                             to={utils.buildPathWithSegments({ ...segments, field: field.id }, `edit`)}
                           >{field.name}</NavLink>
                         </Card.Header>
-                        <Card.Meta>{field.abapName} - {field.type ? field.type : field.customType}</Card.Meta>
+                        <Card.Meta>{field.abapName} - {field.type ? field.type : (<NavLink className="ui"
+                          to={utils.buildPathWithSegments({ schema: segments.schema, type: field.fieldType.id }, `edit`)}
+                        >{field.customType}</NavLink>)}</Card.Meta>
                         <Card.Description>
                           {field.description}
                         </Card.Description>

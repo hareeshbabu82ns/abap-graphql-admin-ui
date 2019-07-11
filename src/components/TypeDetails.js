@@ -8,7 +8,7 @@ const TypeDetails = ({ history, match, mutate }) => (
   <Query query={GET_TYPE_BY_ID}
     variables={{
       typeInput:
-        { guid: match.params.typeid }
+        { guid: decodeURIComponent(match.params.typeid) }
     }}>
     {({ loading, error, data }) => {
       const segments = utils.getPathSegments(history.location.pathname)
@@ -31,7 +31,7 @@ const TypeDetails = ({ history, match, mutate }) => (
           <Mutation mutation={CREATE_TYPE}>
             {(createType, { data }) => (<TypeForm type={type}
               onSubmit={(data) => {
-                return createType({ variables: { data } }).then((result) => {
+                return createType({ variables: { data: { ...data, rootSchema: segments.schema } } }).then((result) => {
                   history.push(utils.buildPathWithSegments({ ...segments, type: result.data.createType[0].id }, `edit`))
                   return data
                 })

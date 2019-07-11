@@ -63,17 +63,8 @@ query search($fieldsWhere: FieldWhereInput!){
     type
     resolver
     customType
-    parentType{
+    fieldType{
       id:guid
-      name
-    }
-    parentField{
-      id:guid
-      name
-      parentType{
-        id:guid
-        name
-      }
     }
   }
 }

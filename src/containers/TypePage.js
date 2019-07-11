@@ -40,14 +40,12 @@ const TypePage = ({ history }) => {
             active={currentOperation === 'search'}
             onClick={(e, { value }) => {
               history.push(utils.buildPathWithSegments(segments, 'search'))
-              // history.push(`/schema/${encodeURIComponent(schemaId)}/type/${encodeURIComponent(typeId)}/search`)
             }}><Icon name='search' />
           </Menu.Item>
           <Menu.Item name='edit'
             active={currentOperation === 'edit'}
             onClick={(e, { value }) => {
               history.push(utils.buildPathWithSegments(segments, 'edit'))
-              // history.push(`/schema/${encodeURIComponent(schemaId)}/type/${encodeURIComponent(typeId)}/edit`)
             }}><Icon name='edit' />
           </Menu.Item>
 
@@ -55,12 +53,10 @@ const TypePage = ({ history }) => {
             <Dropdown.Menu>
               <Dropdown.Item as={NavLink} active={currentOperation === 'new'}
                 to={utils.buildPathWithSegments({ schema: schemaId }, 'type/_/new')}
-              // to={`/schema/${encodeURIComponent(schemaId)}/type/new`}
               >Type</Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item as={NavLink}
                 to={utils.buildPathWithSegments(segments, 'field/_/new')}
-              // to={`/schema/${encodeURIComponent(schemaId)}/type/${encodeURIComponent(typeId)}/field/_/new`}
               >
                 Field</Dropdown.Item>
             </Dropdown.Menu>
