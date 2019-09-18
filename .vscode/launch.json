@@ -1,0 +1,43 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "DEV - Server:9000",
+      "program": "${workspaceFolder}/server/src/app.js",
+      "console": "internalConsole",
+      "outputCapture": "std",
+      "env": {
+        "NODE_ENV": "local",
+        "GQL_CRM_BASE_URL": "http://vhcalnplci.terabits.io/sap/bc/api/gql",
+        "SAP_CLIENT": "001",
+        "REDIS_HOST": "localhost",
+        "REDIS_PORT": "6379",
+        "REDIS_PASS": ""
+      },
+      "skipFiles": [
+        "${workspaceRoot}/node_modules/**/*.js",
+        "${workspaceRoot}/server/node_modules/**/*.js",
+        "<node_internals>/**/*.js"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Mocha Current File",
+      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "--timeout",
+        "999999",
+        "--colors",
+        "${file}"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}

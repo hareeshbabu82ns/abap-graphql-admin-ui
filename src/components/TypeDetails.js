@@ -1,5 +1,6 @@
 import React from 'react'
-import { Query, Mutation, graphql, compose } from "react-apollo";
+import { Query, Mutation, graphql } from "react-apollo";
+import { flowRight as compose } from 'lodash';
 import TypeForm from './TypeForm'
 import { GET_TYPE_BY_ID, UPDATE_TYPE_BY_ID, CREATE_TYPE, DELETE_TYPE_BY_ID } from '../utils/gql_queries_type'
 import utils from '../utils/utils'

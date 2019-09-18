@@ -83,8 +83,28 @@ query search($typesWhere:TypeWhereInput!,
   }
 }
 `;
+const GET_ENUM_VALUES_BY_NAME = gql`
+query search($enumName: String!){
+  __type(name:$enumName){
+    enumValues{
+      name
+    }
+  }
+}
+`;
+const GET_SCHEMA_TYPES = gql`
+query{
+  __schema{
+    types{
+      name
+      kind
+    }
+  }
+}
+`;
 export {
   GET_SCHEMA_LIST, GET_SCHEMA_BY_ID,
   UPDATE_SCHEMA_BY_ID, CREATE_SCHEMA, DELETE_SCHEMA_BY_ID,
-  SEARCH_SCHEMA_FOR_TYPES_FIELDS_BY_NAME
+  SEARCH_SCHEMA_FOR_TYPES_FIELDS_BY_NAME,
+  GET_ENUM_VALUES_BY_NAME, GET_SCHEMA_TYPES
 };

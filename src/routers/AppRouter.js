@@ -7,6 +7,7 @@ import ErrorPage from "../containers/ErrorPage";
 import DashboardPage from "../containers/DashboardPage";
 import SchemaPage from "../containers/SchemaPage";
 import TypePage from "../containers/TypePage";
+import FieldPage from "../containers/FieldPage";
 import GraphqlEditorPage from "../containers/GraphqlEditorPage";
 import VoyagerPage from '../containers/VoyagerPage'
 import NavBar from "../components/NavBar";
@@ -24,6 +25,7 @@ const AppRouter = () => (
           <Route path="/" component={DashboardPage} exact />
           <Route path={`/schema/:id/graph`} component={VoyagerPage} exact />
           <Route path={`/schema/:id/editor`} component={GraphqlEditorPage} exact />
+          <Route path={`/schema/:id/type/:typeid/field`} component={FieldPage} />
           <Route path={`/schema/:id/type`} component={TypePage} />
           <Route path="/schema" component={SchemaPage} />
 

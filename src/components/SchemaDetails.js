@@ -1,5 +1,6 @@
 import React from 'react'
-import { Query, Mutation, graphql, compose } from "react-apollo";
+import { Query, Mutation, graphql } from "react-apollo";
+import { flowRight as compose } from 'lodash';
 import SchemaForm from './SchemaForm'
 import { GET_SCHEMA_BY_ID, UPDATE_SCHEMA_BY_ID, CREATE_SCHEMA, DELETE_SCHEMA_BY_ID } from '../utils/gql_queries_schema'
 import utils from '../utils/utils'
