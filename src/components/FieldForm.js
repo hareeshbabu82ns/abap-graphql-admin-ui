@@ -4,7 +4,7 @@ import { Formik, Form, Field } from 'formik';
 import { Form as UIForm } from 'semantic-ui-react'
 import { toast } from 'react-semantic-toasts';
 import _ from 'lodash'
-import { GET_SCHEMA_TYPES } from '../utils/gql_queries_schema'
+import { GET_SCHEMA_TYPES_BY_SCHEMA } from '../utils/gql_queries_schema'
 import SemanticField from '../utils/SemanticField'
 
 import * as Yup from 'yup';
@@ -51,6 +51,7 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
       }}
     >
       {({ touched, errors, isSubmitting, dirty, handleSubmit, handleReset, handleDelete }) => {
+        console.log(field)
         const renderMessages = () => (
           Object.keys(errors).map((key, index) => (
             toast({
@@ -106,7 +107,8 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
               error={touched.description && errors.description}
             />
             <UIForm.Group widths="equal">
-              <Query query={GET_SCHEMA_TYPES}>
+              <Query query={GET_SCHEMA_TYPES_BY_SCHEMA}
+                variables={{ schemaId: field.rootSchema }}>
                 {({ loading, error, data }) => {
                   if (loading)
                     return (
@@ -131,10 +133,11 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
                     );
 
                   if (error) return <p>Error Loading Field Type</p>;
+                  //TODO: find a way to fetch Scalars from respective schema instead of Admin Schema
                   const optionsScalar = data.__schema.types.filter(type => type.kind === "SCALAR")
                     .map(type => ({ key: type.name, value: type.name, text: type.name }))
                   optionsScalar.push({ key: '', value: '', text: '' })
-                  const optionsCustomTypes = data.__schema.types.filter(type =>
+                  const optionsCustomTypes = data.schema[0].types.filter(type =>
                     type.kind === "OBJECT" && type.name.substring(0, 2) !== '__')
                     .map(type => ({ key: type.name, value: type.name, text: type.name }))
                   optionsCustomTypes.push({ key: '', value: '', text: '' })

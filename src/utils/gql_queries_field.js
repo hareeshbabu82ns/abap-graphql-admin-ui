@@ -28,6 +28,7 @@ const GET_FIELD_BY_ID = gql`
       resolver
       defaultValue
       isEnum
+      rootSchema
     }
   }
 `;

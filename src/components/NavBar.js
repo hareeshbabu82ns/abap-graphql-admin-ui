@@ -6,8 +6,10 @@ import {
 import { NavLink, withRouter } from "react-router-dom";
 import logo from '../logo.svg';
 import SchemaDropdown from './SchemaDropdown'
+import utils from '../utils/utils'
 
 const navbar = ({ history }) => {
+  const segments = utils.getPathSegments(history.location.pathname)
   return (
     <Menu fixed='top' color="teal" inverted>
       <Container>
@@ -27,28 +29,20 @@ const navbar = ({ history }) => {
             name='Voyager'
             active={/^(\/schema)\/((\S.*))(\/graph)/g.test(history.location.pathname)}
             onClick={(e, { value }) => {
-              const schemaIdRegex = /^(\/schema)\/((\S.*))(\/.*$)/g;
-              const schemaId = history.location.pathname
-                .replace(schemaIdRegex, '$2');
-              if (history.location.pathname === `/schema/${schemaId}/graph`)
-                // history.push(`/schema/${schemaId}/edit`)
+              if (history.location.pathname === `/schema/${encodeURIComponent(segments.schema)}/graph`)
                 history.goBack()
               else
-                history.push(`/schema/${schemaId}/graph`)
+                history.push(`/schema/${encodeURIComponent(segments.schema)}/graph`)
             }}
           />
           <Menu.Item
             name='Editor'
             active={/^(\/schema)\/((\S.*))(\/editor)/g.test(history.location.pathname)}
             onClick={(e, { value }) => {
-              const schemaIdRegex = /^(\/schema)\/((\S.*))(\/.*$)/g;
-              const schemaId = history.location.pathname
-                .replace(schemaIdRegex, '$2');
-              if (history.location.pathname === `/schema/${schemaId}/editor`)
-                // history.push(`/schema/${schemaId}/edit`)
+              if (history.location.pathname === `/schema/${encodeURIComponent(segments.schema)}/editor`)
                 history.goBack()
               else
-                history.push(`/schema/${schemaId}/editor`)
+                history.push(`/schema/${encodeURIComponent(segments.schema)}/editor`)
             }}
           />
         </Menu.Menu>

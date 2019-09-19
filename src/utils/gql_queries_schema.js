@@ -102,9 +102,26 @@ query{
   }
 }
 `;
+const GET_SCHEMA_TYPES_BY_SCHEMA = gql`
+query search($schemaId: ID!){
+  schema(where:{guid:$schemaId}){
+    types{
+      name
+      kind
+    }
+  }
+  __schema{
+    types{
+      name
+      kind
+    }
+  }
+}
+`;
 export {
   GET_SCHEMA_LIST, GET_SCHEMA_BY_ID,
   UPDATE_SCHEMA_BY_ID, CREATE_SCHEMA, DELETE_SCHEMA_BY_ID,
   SEARCH_SCHEMA_FOR_TYPES_FIELDS_BY_NAME,
-  GET_ENUM_VALUES_BY_NAME, GET_SCHEMA_TYPES
+  GET_ENUM_VALUES_BY_NAME, GET_SCHEMA_TYPES,
+  GET_SCHEMA_TYPES_BY_SCHEMA
 };

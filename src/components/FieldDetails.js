@@ -15,7 +15,7 @@ const FieldDetails = ({ history, match, mutate }) => (
       const segments = utils.getPathSegments(history.location.pathname)
       if (loading) return <p>Loading...</p>;
       if (error) return <p>Error Loading Field List</p>;
-      let field = match.params.fieldid ? data.field[0] : { name: '', description: '', abapName: '', type: '', customType: '' };
+      let field = match.params.fieldid ? data.field[0] : { name: '', description: '', abapName: '', type: '', customType: '', rootSchema: segments.schema };
       return match.params.fieldid ? (
         <Mutation mutation={UPDATE_FIELD_BY_ID}>
           {(updateField, { data }) => (<FieldForm field={field}

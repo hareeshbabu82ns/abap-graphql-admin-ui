@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useQuery } from "react-apollo";
 import { withRouter } from "react-router-dom";
 // import _ from 'lodash'
-import { Dropdown, Loader } from 'semantic-ui-react'
+import { Dropdown } from 'semantic-ui-react'
 import { GET_SCHEMA_LIST } from '../utils/gql_queries_schema'
 import utils from '../utils/utils'
 
