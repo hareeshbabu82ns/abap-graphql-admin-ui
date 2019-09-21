@@ -1,0 +1,40 @@
+# Every test file has one or more tests...
+test_name: Get Some Data from API
+
+# ...and each test has one or more stages (e.g. an HTTP request)
+stages:
+  - name: Make sure request fails without login
+
+    # Define the request to be made...
+    request:
+      url: http://vhcalnplci.terabits.io/sap/bc/api/gql/gql_admin?sap_client=001
+      method: GET
+
+    # ...and the expected response code and body
+    response:
+      status_code: 401
+
+  - name: Make sure login is successful
+
+    # Define the request to be made...
+    request:
+      url: http://vhcalnplci.terabits.io/sap/bc/api/gql/gql_admin?sap_client=001
+      method: GET
+      headers:
+        Authorization: "Basic {tavern.env_vars.AUTH}"
+
+    # ...and the expected response code and body
+    response:
+      status_code: 200
+
+  - name: Make sure subsequent call is successful
+
+    # Define the request to be made...
+    request:
+      url: http://vhcalnplci.terabits.io/sap/bc/api/gql/gql_admin?sap_client=001
+      method: GET
+      # cookies: [MYSAPSSO2, SAP_SESSIONID_NPL_001]
+
+    # ...and the expected response code and body
+    response:
+      status_code: 200
