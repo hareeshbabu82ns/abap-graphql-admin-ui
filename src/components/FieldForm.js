@@ -4,8 +4,9 @@ import { Formik, Form, Field } from 'formik';
 import { Form as UIForm } from 'semantic-ui-react'
 import { toast } from 'react-semantic-toasts';
 import _ from 'lodash'
-import { GET_SCHEMA_TYPES_BY_SCHEMA } from '../utils/gql_queries_schema'
+import { GET_SCHEMA_TYPES } from '../utils/gql_queries_schema'
 import SemanticField from '../utils/SemanticField'
+import { SchemaConsumer } from '../utils/schema_context'
 
 import * as Yup from 'yup';
 
@@ -107,58 +108,63 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
               error={touched.description && errors.description}
             />
             <UIForm.Group widths="equal">
-              <Query query={GET_SCHEMA_TYPES_BY_SCHEMA}
-                variables={{ schemaId: field.rootSchema }}>
-                {({ loading, error, data }) => {
-                  if (loading)
-                    return (
-                      <React.Fragment>
-                        <UIForm.Field
-                          label="Field Type (Scalar)"
-                          control={Field}
-                          name="type"
-                          field="text"
-                          placeholder="Field Type (Scalar)"
-                          error={touched.kind && errors.kind}
-                        />
-                        <UIForm.Field
-                          label="Field Type (Custom)"
-                          control={Field}
-                          name="customType"
-                          field="text"
-                          placeholder="Field Type (Custom)"
-                          error={touched.kind && errors.kind}
-                        />
-                      </React.Fragment>
-                    );
+              <SchemaConsumer>
+                {({ client }) => (
+                  <Query query={GET_SCHEMA_TYPES}
+                    variables={{ schemaId: field.rootSchema }}
+                    client={client}>
+                    {({ loading, error, data }) => {
+                      if (loading)
+                        return (
+                          <React.Fragment>
+                            <UIForm.Field
+                              label="Field Type (Scalar)"
+                              control={Field}
+                              name="type"
+                              field="text"
+                              placeholder="Field Type (Scalar)"
+                              error={touched.kind && errors.kind}
+                            />
+                            <UIForm.Field
+                              label="Field Type (Custom)"
+                              control={Field}
+                              name="customType"
+                              field="text"
+                              placeholder="Field Type (Custom)"
+                              error={touched.kind && errors.kind}
+                            />
+                          </React.Fragment>
+                        );
 
-                  if (error) return <p>Error Loading Field Type</p>;
-                  //TODO: find a way to fetch Scalars from respective schema instead of Admin Schema
-                  const optionsScalar = data.__schema.types.filter(type => type.kind === "SCALAR")
-                    .map(type => ({ key: type.name, value: type.name, text: type.name }))
-                  optionsScalar.push({ key: '', value: '', text: '' })
-                  const optionsCustomTypes = data.schema[0].types.filter(type =>
-                    type.kind === "OBJECT" && type.name.substring(0, 2) !== '__')
-                    .map(type => ({ key: type.name, value: type.name, text: type.name }))
-                  optionsCustomTypes.push({ key: '', value: '', text: '' })
-                  return (<React.Fragment>
-                    <SemanticField
-                      name="type"
-                      label="Field Type (Scalar)"
-                      component={UIForm.Select}
-                      options={optionsScalar}
-                      error={touched.kind && errors.kind}
-                    />
-                    <SemanticField
-                      name="customType"
-                      label="Field Type (Custom)"
-                      component={UIForm.Select}
-                      options={optionsCustomTypes}
-                      error={touched.kind && errors.kind}
-                    />
-                  </React.Fragment>)
-                }}
-              </Query>
+                      if (error) return <p>Error Loading Field Type</p>;
+                      //TODO: find a way to fetch Scalars from respective schema instead of Admin Schema
+                      const optionsScalar = data.__schema.types.filter(type => type.kind === "SCALAR")
+                        .map(type => ({ key: type.name, value: type.name, text: type.name }))
+                      optionsScalar.push({ key: '', value: '', text: '' })
+                      const optionsCustomTypes = data.__schema.types.filter(type =>
+                        type.kind === "OBJECT" && type.name.substring(0, 2) !== '__')
+                        .map(type => ({ key: type.name, value: type.name, text: type.name }))
+                      optionsCustomTypes.push({ key: '', value: '', text: '' })
+                      return (<React.Fragment>
+                        <SemanticField
+                          name="type"
+                          label="Field Type (Scalar)"
+                          component={UIForm.Select}
+                          options={optionsScalar}
+                          error={touched.kind && errors.kind}
+                        />
+                        <SemanticField
+                          name="customType"
+                          label="Field Type (Custom)"
+                          component={UIForm.Select}
+                          options={optionsCustomTypes}
+                          error={touched.kind && errors.kind}
+                        />
+                      </React.Fragment>)
+                    }}
+                  </Query>
+                )}
+              </SchemaConsumer>
               <UIForm.Group>
                 <SemanticField
                   name="isNonNull"
