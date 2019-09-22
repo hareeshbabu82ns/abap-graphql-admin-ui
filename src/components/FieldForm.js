@@ -137,7 +137,6 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
                         );
 
                       if (error) return <p>Error Loading Field Type</p>;
-                      //TODO: find a way to fetch Scalars from respective schema instead of Admin Schema
                       const optionsScalar = data.__schema.types.filter(type => type.kind === "SCALAR")
                         .map(type => ({ key: type.name, value: type.name, text: type.name }))
                       optionsScalar.push({ key: '', value: '', text: '' })

@@ -6,11 +6,11 @@ import config from '../utils/config'
 import { GET_SCHEMA_BY_ID } from '../utils/gql_queries_schema'
 
 
-const SchemaDetails = ({ match }) => (
+const SchemaVoyager = ({ match }) => (
   <Query query={GET_SCHEMA_BY_ID}
     variables={{
       schemaInput:
-        { guid: match.params.id }
+        { guid: decodeURIComponent(match.params.id) }
     }}>
     {({ loading, error, data }) => {
 
@@ -38,4 +38,4 @@ const SchemaDetails = ({ match }) => (
   </Query>
 );
 
-export default withRouter(SchemaDetails)
+export default withRouter(SchemaVoyager)

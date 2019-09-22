@@ -9,7 +9,7 @@ const SchemaDetails = ({ match }) => (
   <Query query={GET_SCHEMA_BY_ID}
     variables={{
       schemaInput:
-        { guid: match.params.id }
+        { guid: decodeURIComponent(match.params.id) }
     }}>
     {({ loading, error, data }) => {
 

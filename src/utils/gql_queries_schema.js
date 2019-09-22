@@ -7,6 +7,8 @@ const GET_SCHEMA_LIST = gql`
       name
       description
       path
+      query
+      mutation
     }
   }
 `;
@@ -18,6 +20,8 @@ const GET_SCHEMA_BY_ID = gql`
       name
       description
       path
+      query
+      mutation
     }
   }
 `;
@@ -106,6 +110,7 @@ const GET_SCHEMA_TYPES_BY_SCHEMA = gql`
 query search($schemaId: ID!){
   schema(where:{guid:$schemaId}){
     types{
+      id:guid
       name
       kind
     }
