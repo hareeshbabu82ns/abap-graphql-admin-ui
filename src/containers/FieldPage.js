@@ -1,18 +1,42 @@
 import React from 'react';
 import { Route, NavLink } from "react-router-dom";
 import { withRouter } from "react-router-dom";
-import { Query } from "react-apollo";
-import { Segment, Container, Menu, Icon, Dropdown } from 'semantic-ui-react'
+import { useQuery } from "react-apollo";
+import {
+  Segment, Container, Menu, Icon, Dropdown,
+  Breadcrumb
+} from 'semantic-ui-react'
 import FieldDetails from '../components/FieldDetails'
 import utils from '../utils/utils'
 import { GET_FIELD_BY_ID } from '../utils/gql_queries_field'
+import { GET_TYPE_BY_ID } from '../utils/gql_queries_type'
+import { GET_SCHEMA_BY_ID } from '../utils/gql_queries_schema'
 
 const FieldPage = ({ history }) => {
   const segments = utils.getPathSegments(history.location.pathname)
   console.log('segments', segments)
   const schemaId = segments.schema;
+  const typeId = segments.type;
   const fieldId = segments.field;
   const currentOperation = segments.operation;
+  const resType = useQuery(GET_TYPE_BY_ID, {
+    variables: {
+      typeInput:
+        { guid: typeId }
+    }
+  });
+  const resSchema = useQuery(GET_SCHEMA_BY_ID, {
+    variables: {
+      schemaInput:
+        { guid: schemaId }
+    }
+  });
+  const resField = useQuery(GET_FIELD_BY_ID, {
+    variables: {
+      fieldInput:
+        { guid: fieldId }
+    }
+  });
   return (
     <Container fluid style={{
       paddingLeft: '2em',
@@ -20,19 +44,32 @@ const FieldPage = ({ history }) => {
     }} >
 
       <Menu attached='top'>
+        <Menu.Item color='teal' active={true}>Field</Menu.Item>
         <Menu.Item>
-          Field:&nbsp;
-          {currentOperation !== 'new' && <Query query={GET_FIELD_BY_ID}
-            variables={{
-              fieldInput:
-                { guid: fieldId }
-            }}>
-            {({ loading, error, data }) => {
-              if (loading) return 'Loading...';
-              if (error) return 'Error Loading Field';
-              return data.field[0].name
-            }}
-          </Query>}
+          {currentOperation !== 'new' &&
+            <Breadcrumb>
+              {!resSchema.loading && !resSchema.error &&
+                <React.Fragment>
+                  <Breadcrumb.Section link as={NavLink}
+                    to={utils.buildPathWithSegments({ schema: schemaId }, 'edit')}
+                  >
+                    {resSchema.data.schema[0].name}
+                  </Breadcrumb.Section>
+                  <Breadcrumb.Divider>/</Breadcrumb.Divider>
+                </React.Fragment>}
+              {!resType.loading && !resType.error &&
+                <React.Fragment>
+                  <Breadcrumb.Section link as={NavLink}
+                    to={utils.buildPathWithSegments({ schema: schemaId, type: typeId }, 'edit')}
+                  >{resType.data.type[0].name}</Breadcrumb.Section>
+                  <Breadcrumb.Divider>/</Breadcrumb.Divider>
+                </React.Fragment>
+              }
+              {!resField.loading && !resField.error &&
+                <Breadcrumb.Section active>{resField.data.field[0].name}</Breadcrumb.Section>
+              }
+            </Breadcrumb>
+          }
         </Menu.Item>
         <Menu.Menu position='right'>
           <Menu.Item name='search'

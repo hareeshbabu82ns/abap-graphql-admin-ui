@@ -52,7 +52,6 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
       }}
     >
       {({ touched, errors, isSubmitting, dirty, handleSubmit, handleReset, handleDelete }) => {
-        console.log(field)
         const renderMessages = () => (
           Object.keys(errors).map((key, index) => (
             toast({
@@ -139,11 +138,11 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
                       if (error) return <p>Error Loading Field Type</p>;
                       const optionsScalar = data.__schema.types.filter(type => type.kind === "SCALAR")
                         .map(type => ({ key: type.name, value: type.name, text: type.name }))
-                      optionsScalar.push({ key: '', value: '', text: '' })
+                      optionsScalar.push({ key: '_EMPTY_', value: ' ', text: ' ' })
                       const optionsCustomTypes = data.__schema.types.filter(type =>
                         type.kind === "OBJECT" && type.name.substring(0, 2) !== '__')
                         .map(type => ({ key: type.name, value: type.name, text: type.name }))
-                      optionsCustomTypes.push({ key: '', value: '', text: '' })
+                      optionsCustomTypes.push({ key: '_EMPTY_', value: ' ', text: ' ' })
                       return (<React.Fragment>
                         <SemanticField
                           name="type"

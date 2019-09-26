@@ -20,8 +20,8 @@ const SchemaPage = ({ history }) => {
     }} >
 
       <Menu attached='top'>
+        <Menu.Item color='teal' active={true}>Schema</Menu.Item>
         <Menu.Item>
-          Schema:&nbsp;
           {currentOperation !== 'new' && <Query query={GET_SCHEMA_BY_ID}
             variables={{
               schemaInput:

@@ -72,6 +72,9 @@ query search($typesWhere:TypeWhereInput!,
     type
     resolver
     customType
+    isList
+    isNonNull
+    isNonNullList
     parentType{
       id:guid
       name

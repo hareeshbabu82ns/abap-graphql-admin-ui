@@ -1,6 +1,6 @@
 import React from 'react'
 import { Query, Mutation, graphql } from "react-apollo";
-import { flowRight as compose } from 'lodash';
+import _, { flowRight as compose } from 'lodash';
 import FieldForm from './FieldForm'
 import { GET_FIELD_BY_ID, UPDATE_FIELD_BY_ID, CREATE_FIELD, DELETE_FIELD_BY_ID } from '../utils/gql_queries_field'
 import utils from '../utils/utils'
@@ -21,7 +21,15 @@ const FieldDetails = ({ history, match, mutate }) => (
           {(updateField, { data }) => (<FieldForm field={field}
             onSubmit={(data) => {
               let { id, __typename, ...updateData } = data;
-              return updateField({ variables: { data: updateData, where: { guid: segments.field } } })
+              return updateField({
+                variables: {
+                  data: {
+                    ...updateData,
+                    type: _.get(updateData, 'type', '').trim(),
+                    customType: _.get(updateData, 'customType', '').trim(),
+                  }, where: { guid: segments.field }
+                }
+              })
             }}
             onDelete={(data) => {
               mutate({ mutation: DELETE_FIELD_BY_ID, variables: { id: segments.field } })
@@ -33,7 +41,17 @@ const FieldDetails = ({ history, match, mutate }) => (
           <Mutation mutation={CREATE_FIELD}>
             {(createField, { data }) => (<FieldForm field={field}
               onSubmit={(data) => {
-                return createField({ variables: { data: { ...data, rootSchema: segments.schema } } }).then((result) => {
+                return createField({
+                  variables: {
+                    data: {
+                      ...data,
+                      type: _.get(data, 'type', '').trim(),
+                      customType: _.get(data, 'customType', '').trim(),
+                      parentGuid: segments.type,
+                      rootSchema: segments.schema
+                    }
+                  }
+                }).then((result) => {
                   history.push(utils.buildPathWithSegments({ ...segments, field: result.data.createField[0].id }, `edit`))
                   return data
                 })

@@ -6,6 +6,7 @@ import queryString from 'querystring'
 import { Segment, Dropdown, Menu, Icon, Input, Header, Card } from 'semantic-ui-react'
 import { SEARCH_TYPE_FOR_FIELDS_BY_NAME } from '../utils/gql_queries_type'
 import utils from '../utils/utils'
+import { formatFieldTypeNullability } from '../utils/gql_utils'
 
 const options = [
   { key: 'all', text: 'All', value: 'all' },
@@ -50,53 +51,59 @@ const TypeSearch = ({ history, match, searchInput }) => {
         </Menu.Menu>
       </Menu>
 
-      {!searchQuery && <Segment attached='bottom' placeholder>
-        <Header icon>
-          <Icon name='search' />
-          Search for some Items to show here.
-    </Header>
-      </Segment>}
-      {searchQuery && <Query query={SEARCH_TYPE_FOR_FIELDS_BY_NAME}
-        variables={{
-          "fieldsWhere": {
-            "name_cp": searchQuery,
-            "parentGuid": segments.type,
-            "rootSchema": segments.schema
-          }
-        }}>
-        {({ loading, error, data }) => {
-          console.log(JSON.stringify(match, null, 2))
-          if (loading) return <Segment loading></Segment>;
-          if (error) return <p>Error Loading Type List</p>;
-          return (
-            <div>
-              {selectedTab === 'fields' && <Segment attached='bottom'>
-                <Card.Group>
-                  {data.fields.map(field => (
-                    <Card key={field.id}>
-                      <Card.Content>
-                        <Card.Header>
-                          <NavLink
-                            to={utils.buildPathWithSegments({ ...segments, field: field.id }, `edit`)}
-                          >{field.name}</NavLink>
-                        </Card.Header>
-                        <Card.Meta>{field.abapName} - {field.type ? field.type : (<NavLink className="ui"
-                          to={utils.buildPathWithSegments({ schema: segments.schema, type: field.fieldType.id }, `edit`)}
-                        >{field.customType}</NavLink>)}</Card.Meta>
-                        <Card.Description>
-                          {field.description}
-                        </Card.Description>
-                      </Card.Content>
-                    </Card>
-                  ))}
-                </Card.Group>
-              </Segment>}
-            </div>
-          );
-        }}
-      </Query>}
+      { // empty searchQuery will show Nothing
+        // !searchQuery &&
+        // <Segment attached='bottom' placeholder>
+        //   <Header icon>
+        //     <Icon name='search' />
+        //     Search for some Items to show here.
+        // </Header>
+        // </Segment>
+      }
+      {
+        // searchQuery && 
+        <Query query={SEARCH_TYPE_FOR_FIELDS_BY_NAME}
+          variables={{
+            "fieldsWhere": {
+              "name_cp": searchQuery,
+              "parentGuid": segments.type,
+              "rootSchema": segments.schema
+            }
+          }}>
+          {({ loading, error, data }) => {
+            console.log(JSON.stringify(match, null, 2))
+            if (loading) return <Segment loading></Segment>;
+            if (error) return <p>Error Loading Type List</p>;
+            return (
+              <div>
+                {selectedTab === 'fields' && <Segment attached='bottom'>
+                  <Card.Group>
+                    {data.fields.map(field => (
+                      <Card key={field.id}>
+                        <Card.Content>
+                          <Card.Header>
+                            <NavLink
+                              to={utils.buildPathWithSegments({ ...segments, field: field.id }, `edit`)}
+                            >{field.name}</NavLink>
+                          </Card.Header>
+                          <Card.Meta>{field.abapName} - {field.type ? field.type : (<NavLink className="ui"
+                            to={utils.buildPathWithSegments({ schema: segments.schema, type: field.fieldType.id }, `edit`)}
+                          >
+                            {formatFieldTypeNullability(field)}</NavLink>)}
+                          </Card.Meta>
+                          <Card.Description>
+                            {field.description}
+                          </Card.Description>
+                        </Card.Content>
+                      </Card>
+                    ))}
+                  </Card.Group>
+                </Segment>}
+              </div>
+            );
+          }}
+        </Query>}
     </div>
-
   )
 }
 

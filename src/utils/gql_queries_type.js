@@ -66,6 +66,9 @@ query search($fieldsWhere: FieldWhereInput!){
     fieldType{
       id:guid
     }
+    isNonNull
+    isList
+    isNonNullList
   }
 }
 `;

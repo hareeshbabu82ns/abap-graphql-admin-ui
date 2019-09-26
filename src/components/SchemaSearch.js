@@ -6,6 +6,7 @@ import queryString from 'querystring'
 import { Segment, Dropdown, Menu, Icon, Input, Header, Card } from 'semantic-ui-react'
 import { SEARCH_SCHEMA_FOR_TYPES_FIELDS_BY_NAME } from '../utils/gql_queries_schema'
 import utils from '../utils/utils'
+import { formatFieldTypeNullability } from '../utils/gql_utils'
 
 const options = [
   { key: 'all', text: 'All', value: 'all' },
@@ -61,114 +62,119 @@ const SchemaSearch = ({ history, match, searchInput }) => {
         </Menu.Menu>
       </Menu>
 
-      {!searchQuery && <Segment attached='bottom' placeholder>
-        <Header icon>
-          <Icon name='search' />
-          Search for some Items to show here.
-    </Header>
-      </Segment>}
-      {searchQuery && <Query query={SEARCH_SCHEMA_FOR_TYPES_FIELDS_BY_NAME}
-        variables={{
-          "typesWhere": {
-            "name_cp": searchQuery,
-            "rootSchema": schemaId
-          },
-          "fieldsWhere": {
-            "name_cp": searchQuery,
-            "rootSchema": schemaId
-          }
-        }}>
-        {({ loading, error, data }) => {
-          console.log(JSON.stringify(match, null, 2))
-          if (loading) return <Segment loading></Segment>;
-          if (error) return <p>Error Loading Schema List</p>;
-          return (
-            <div>
-              {(selectedTab === 'types') && <Segment attached='bottom'>
-                <Card.Group>
-                  {data.types.filter((type) => type.kind === 'OBJECT').map(type => (
-                    <Card key={type.id}>
-                      <Card.Content>
-                        <Card.Header>
-                          <NavLink
-                            to={utils.buildPathWithSegments({ ...segments, type: type.id }, `edit`)}
-                          >{type.name}</NavLink>
-                        </Card.Header>
-                        <Card.Meta>{type.abapName}</Card.Meta>
-                        <Card.Description>
-                          {type.description}
-                        </Card.Description>
-                      </Card.Content>
-                    </Card>
-                  ))}
-                </Card.Group>
-              </Segment>}
-              {(selectedTab === 'input_types') && <Segment attached='bottom'>
-                <Card.Group>
-                  {data.types.filter((type) => type.kind === 'INPUT_OBJECT').map(type => (
-                    <Card key={type.id}>
-                      <Card.Content>
-                        <Card.Header>
-                          <NavLink
-                            to={utils.buildPathWithSegments({ ...segments, type: type.id }, `edit`)}
-                          >{type.name}</NavLink>
-                        </Card.Header>
-                        <Card.Meta>{type.abapName}</Card.Meta>
-                        <Card.Description>
-                          {type.description}
-                        </Card.Description>
-                      </Card.Content>
-                    </Card>
-                  ))}
-                </Card.Group>
-              </Segment>}
-              {(selectedTab === 'enums') && <Segment attached='bottom'>
-                <Card.Group>
-                  {data.types.filter((type) => type.kind === 'ENUM').map(type => (
-                    <Card key={type.id}>
-                      <Card.Content>
-                        <Card.Header>
-                          <NavLink
-                            to={utils.buildPathWithSegments({ ...segments, type: type.id }, `edit`)}
-                          >{type.name}</NavLink>
-                        </Card.Header>
-                        <Card.Meta>{type.abapName}</Card.Meta>
-                        <Card.Description>
-                          {type.description}
-                        </Card.Description>
-                      </Card.Content>
-                    </Card>
-                  ))}
-                </Card.Group>
-              </Segment>}
-              {selectedTab === 'fields' && <Segment attached='bottom'>
-                <Card.Group>
-                  {data.fields.map(field => (
-                    <Card key={field.id}>
-                      <Card.Content>
-                        <Card.Header>
-                          <NavLink
-                            to={utils.buildPathWithSegments({
-                              ...segments, type: _.get(field, 'parentType.id',
-                                _.get(field, 'parentField.parentType.id', '')), field: field.id
-                            }, `edit`)}
-                          >{field.name}</NavLink> ({_.get(field, 'parentType.name',
-                            _.get(field, 'parentField.parentType.name', '') + '.' +
-                            _.get(field, 'parentField.name', ''))})
+      { // empty searchQuery will show Nothing
+        // !searchQuery &&
+        // <Segment attached='bottom' placeholder>
+        //   <Header icon>
+        //     <Icon name='search' />
+        //     Search for some Items to show here.
+        //   </Header>
+        // </Segment>
+      }
+      {
+        // searchQuery && 
+        <Query query={SEARCH_SCHEMA_FOR_TYPES_FIELDS_BY_NAME}
+          variables={{
+            "typesWhere": {
+              "name_cp": searchQuery,
+              "rootSchema": schemaId
+            },
+            "fieldsWhere": {
+              "name_cp": searchQuery,
+              "rootSchema": schemaId
+            }
+          }}>
+          {({ loading, error, data }) => {
+            console.log(JSON.stringify(match, null, 2))
+            if (loading) return <Segment loading></Segment>;
+            if (error) return <p>Error Loading Schema List</p>;
+            return (
+              <div>
+                {(selectedTab === 'types') && <Segment attached='bottom'>
+                  <Card.Group>
+                    {data.types.filter((type) => type.kind === 'OBJECT').map(type => (
+                      <Card key={type.id}>
+                        <Card.Content>
+                          <Card.Header>
+                            <NavLink
+                              to={utils.buildPathWithSegments({ ...segments, type: type.id }, `edit`)}
+                            >{type.name}</NavLink>
                           </Card.Header>
-                        <Card.Meta>{field.abapName} - {field.type ? field.type : field.customType}</Card.Meta>
-                        <Card.Description>
-                          {field.description}
-                        </Card.Description>
-                      </Card.Content>
-                    </Card>
-                  ))}
-                </Card.Group>
-              </Segment>}
-            </div>
-          );
-        }}
-      </Query>}
+                          <Card.Meta>{type.abapName}</Card.Meta>
+                          <Card.Description>
+                            {type.description}
+                          </Card.Description>
+                        </Card.Content>
+                      </Card>
+                    ))}
+                  </Card.Group>
+                </Segment>}
+                {(selectedTab === 'input_types') && <Segment attached='bottom'>
+                  <Card.Group>
+                    {data.types.filter((type) => type.kind === 'INPUT_OBJECT').map(type => (
+                      <Card key={type.id}>
+                        <Card.Content>
+                          <Card.Header>
+                            <NavLink
+                              to={utils.buildPathWithSegments({ ...segments, type: type.id }, `edit`)}
+                            >{type.name}</NavLink>
+                          </Card.Header>
+                          <Card.Meta>{type.abapName}</Card.Meta>
+                          <Card.Description>
+                            {type.description}
+                          </Card.Description>
+                        </Card.Content>
+                      </Card>
+                    ))}
+                  </Card.Group>
+                </Segment>}
+                {(selectedTab === 'enums') && <Segment attached='bottom'>
+                  <Card.Group>
+                    {data.types.filter((type) => type.kind === 'ENUM').map(type => (
+                      <Card key={type.id}>
+                        <Card.Content>
+                          <Card.Header>
+                            <NavLink
+                              to={utils.buildPathWithSegments({ ...segments, type: type.id }, `edit`)}
+                            >{type.name}</NavLink>
+                          </Card.Header>
+                          <Card.Meta>{type.abapName}</Card.Meta>
+                          <Card.Description>
+                            {type.description}
+                          </Card.Description>
+                        </Card.Content>
+                      </Card>
+                    ))}
+                  </Card.Group>
+                </Segment>}
+                {selectedTab === 'fields' && <Segment attached='bottom'>
+                  <Card.Group>
+                    {data.fields.map(field => (
+                      <Card key={field.id}>
+                        <Card.Content>
+                          <Card.Header>
+                            <NavLink
+                              to={utils.buildPathWithSegments({
+                                ...segments, type: _.get(field, 'parentType.id',
+                                  _.get(field, 'parentField.parentType.id', '')), field: field.id
+                              }, `edit`)}
+                            >{field.name}</NavLink> ({_.get(field, 'parentType.name',
+                              _.get(field, 'parentField.parentType.name', '') + '.' +
+                              _.get(field, 'parentField.name', ''))})
+                          </Card.Header>
+                          <Card.Meta>{field.abapName} - {formatFieldTypeNullability(field)}</Card.Meta>
+                          <Card.Description>
+                            {field.description}
+                          </Card.Description>
+                        </Card.Content>
+                      </Card>
+                    ))}
+                  </Card.Group>
+                </Segment>}
+              </div>
+            );
+          }}
+        </Query>}
     </div>
 
   )
