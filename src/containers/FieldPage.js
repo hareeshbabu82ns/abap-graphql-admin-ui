@@ -6,6 +6,7 @@ import {
   Segment, Container, Menu, Icon, Dropdown,
   Breadcrumb
 } from 'semantic-ui-react'
+import _ from 'lodash'
 import FieldDetails from '../components/FieldDetails'
 import utils from '../utils/utils'
 import { GET_FIELD_BY_ID } from '../utils/gql_queries_field'
@@ -14,7 +15,6 @@ import { GET_SCHEMA_BY_ID } from '../utils/gql_queries_schema'
 
 const FieldPage = ({ history }) => {
   const segments = utils.getPathSegments(history.location.pathname)
-  console.log('segments', segments)
   const schemaId = segments.schema;
   const typeId = segments.type;
   const fieldId = segments.field;
@@ -44,32 +44,33 @@ const FieldPage = ({ history }) => {
     }} >
 
       <Menu attached='top'>
-        <Menu.Item color='teal' active={true}>Field</Menu.Item>
+        <Menu.Item color='teal' active={true}>
+          {_.get(resField, 'data.field[0].isEnum',
+            _.get(resType, 'data.type[0].kind', '') === 'ENUM') ? 'Enum' : 'Field'}
+        </Menu.Item>
         <Menu.Item>
-          {currentOperation !== 'new' &&
-            <Breadcrumb>
-              {!resSchema.loading && !resSchema.error &&
-                <React.Fragment>
-                  <Breadcrumb.Section link as={NavLink}
-                    to={utils.buildPathWithSegments({ schema: schemaId }, 'edit')}
-                  >
-                    {resSchema.data.schema[0].name}
-                  </Breadcrumb.Section>
-                  <Breadcrumb.Divider>/</Breadcrumb.Divider>
-                </React.Fragment>}
-              {!resType.loading && !resType.error &&
-                <React.Fragment>
-                  <Breadcrumb.Section link as={NavLink}
-                    to={utils.buildPathWithSegments({ schema: schemaId, type: typeId }, 'edit')}
-                  >{resType.data.type[0].name}</Breadcrumb.Section>
-                  <Breadcrumb.Divider>/</Breadcrumb.Divider>
-                </React.Fragment>
-              }
-              {!resField.loading && !resField.error &&
-                <Breadcrumb.Section active>{resField.data.field[0].name}</Breadcrumb.Section>
-              }
-            </Breadcrumb>
-          }
+          <Breadcrumb>
+            {!resSchema.loading && !resSchema.error &&
+              <React.Fragment>
+                <Breadcrumb.Section link as={NavLink}
+                  to={utils.buildPathWithSegments({ schema: schemaId }, 'edit')}
+                >
+                  {resSchema.data.schema[0].name}
+                </Breadcrumb.Section>
+                <Breadcrumb.Divider>/</Breadcrumb.Divider>
+              </React.Fragment>}
+            {!resType.loading && !resType.error &&
+              <React.Fragment>
+                <Breadcrumb.Section link as={NavLink}
+                  to={utils.buildPathWithSegments({ schema: schemaId, type: typeId }, 'edit')}
+                >{resType.data.type[0].name}</Breadcrumb.Section>
+                {currentOperation !== 'new' && <Breadcrumb.Divider>/</Breadcrumb.Divider>}
+              </React.Fragment>
+            }
+            {currentOperation !== 'new' && !resField.loading && !resField.error &&
+              <Breadcrumb.Section active>{resField.data.field[0].name}</Breadcrumb.Section>
+            }
+          </Breadcrumb>
         </Menu.Item>
         <Menu.Menu position='right'>
           <Menu.Item name='search'

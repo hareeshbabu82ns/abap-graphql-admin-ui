@@ -140,7 +140,7 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
                         .map(type => ({ key: type.name, value: type.name, text: type.name }))
                       optionsScalar.push({ key: '_EMPTY_', value: ' ', text: ' ' })
                       const optionsCustomTypes = data.__schema.types.filter(type =>
-                        type.kind === "OBJECT" && type.name.substring(0, 2) !== '__')
+                        (type.kind === "OBJECT" || type.kind === "ENUM") && type.name.substring(0, 2) !== '__')
                         .map(type => ({ key: type.name, value: type.name, text: type.name }))
                       optionsCustomTypes.push({ key: '_EMPTY_', value: ' ', text: ' ' })
                       return (<React.Fragment>
@@ -149,6 +149,7 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
                           label="Field Type (Scalar)"
                           component={UIForm.Select}
                           options={optionsScalar}
+                          disabled={field.isEnum}
                           error={touched.kind && errors.kind}
                         />
                         <SemanticField
@@ -156,6 +157,7 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
                           label="Field Type (Custom)"
                           component={UIForm.Select}
                           options={optionsCustomTypes}
+                          disabled={field.isEnum}
                           error={touched.kind && errors.kind}
                         />
                       </React.Fragment>)
@@ -168,6 +170,7 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
                   name="isNonNull"
                   toggle
                   label='!'
+                  disabled={field.isEnum}
                   component={UIForm.Checkbox}
                   error={touched.isNonNull && errors.isNonNull}
                 />
@@ -175,6 +178,7 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
                   name="isList"
                   toggle
                   label='[&nbsp;]'
+                  disabled={field.isEnum}
                   component={UIForm.Checkbox}
                   error={touched.isList && errors.isList}
                 />
@@ -182,6 +186,7 @@ const FieldForm = ({ field, onSubmit, onDelete }) => (
                   name="isNonNullList"
                   toggle
                   label='[&nbsp;]!'
+                  disabled={field.isEnum}
                   component={UIForm.Checkbox}
                   error={touched.isNonNullList && errors.isNonNullList}
                 />

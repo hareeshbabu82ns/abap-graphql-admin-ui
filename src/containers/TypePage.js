@@ -6,6 +6,7 @@ import {
   Segment, Container, Menu, Icon, Dropdown,
   Breadcrumb
 } from 'semantic-ui-react'
+import _ from 'lodash'
 import TypeDetails from '../components/TypeDetails'
 import TypeSearch from '../components/TypeSearch'
 import utils from '../utils/utils'
@@ -38,22 +39,22 @@ const TypePage = ({ history }) => {
       paddingRight: '2em'
     }} >
       <Menu attached='top'>
-        <Menu.Item color='teal' active={true}>Type</Menu.Item>
+        <Menu.Item color='teal' active={true}>
+          {_.get(resType, 'data.type[0].kind', '')} Type
+        </Menu.Item>
         <Menu.Item>
-          {currentOperation !== 'new' &&
-            <Breadcrumb>
-              {!resSchema.loading && !resSchema.error &&
-                <React.Fragment>
-                  <Breadcrumb.Section link as={NavLink}
-                    to={utils.buildPathWithSegments({ schema: schemaId }, 'edit')}
-                  >
-                    {resSchema.data.schema[0].name}
-                  </Breadcrumb.Section>
-                  <Breadcrumb.Divider>/</Breadcrumb.Divider>
-                </React.Fragment>}
-              {!resType.loading && !resType.error && <Breadcrumb.Section active>{resType.data.type[0].name}</Breadcrumb.Section>}
-            </Breadcrumb>
-          }
+          <Breadcrumb>
+            {!resSchema.loading && !resSchema.error &&
+              <React.Fragment>
+                <Breadcrumb.Section link as={NavLink}
+                  to={utils.buildPathWithSegments({ schema: schemaId }, 'edit')}
+                >
+                  {resSchema.data.schema[0].name}
+                </Breadcrumb.Section>
+                {currentOperation !== 'new' && <Breadcrumb.Divider>/</Breadcrumb.Divider>}
+              </React.Fragment>}
+            {currentOperation !== 'new' && !resType.loading && !resType.error && <Breadcrumb.Section active>{resType.data.type[0].name}</Breadcrumb.Section>}
+          </Breadcrumb>
         </Menu.Item>
         <Menu.Menu position='right'>
           <Menu.Item name='search'
