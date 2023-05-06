@@ -20,7 +20,7 @@
     "react-bulma-components": "^2.3.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1",
+    "react-scripts": "3.4.4",
     "react-semantic-toasts": "^0.5.4",
     "semantic-ui-react": "^0.87.3",
     "yup": "^0.27.0"
